@@ -1,5 +1,0 @@
-Search algorithm looks for differences below 0.5 %
-
-Compound regions used: 1
-
-Consecutive points: 10

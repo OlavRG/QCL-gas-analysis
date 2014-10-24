@@ -1,5 +1,0 @@
-max_p (Search algorithm looks for differences below) 5.0 %
-
-Compound regions used: 1
-
-min_p_region (Consecutive points): 10
