@@ -1,0 +1,5 @@
+filestring='L:\IST\OP\scratch\Olav Grouwstra\Compounds\Carbon_monoxide\CO_25T.TXT';
+
+fid = fopen(filestring,'rt');
+tmp = textscan(fid, '%s %d %d %d %d', 'Headerlines', 10);
+fclose(fid);
