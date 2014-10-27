@@ -31,18 +31,19 @@ if __name__ == '__main__':
 
     #%cd 'D:\Workspace\Breath Analysis\'
     a = []
-    elements=30 
     
-    file = 'ML in Python\concentration_healthy_asthma.txt'
+    file = 'concentrationArray.txt'
     df = pd.read_csv(file, sep=',', header=None).astype(float)
-    df = df.ix[:, 0:elements-1]   #normalize column count for renaming
+    sample,molecule=df.shape
+    df.ix[:,molecule]='-1'
+    df.ix[sample/2:,molecule]='1'
+    #df = df.ix[:, 0:molecule-1]   #normalize column count for renaming
     df = df.dropna().T.dropna().T
     a.append(df)
     
     df = pd.concat(a)
 
-    train = df.ix[:,:elements-2]#[:,:-1]
-    target = df.ix[:,elements-1].values#df.ix[:,-1:].values.T[0]
-    target[0:70] = -1
+    train = df.ix[:,:molecule-1]#[:,:-1]
+    target = df.ix[:,molecule].values#df.ix[:,-1:].values.T[0]
     mlcomp = df2mlcomp(train, target, 'binary.txt')
 
