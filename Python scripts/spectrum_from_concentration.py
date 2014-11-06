@@ -23,7 +23,7 @@ compound_path   =   'L:\IST\OP\scratch\Adonis\Databases\PNNL Database\Compounds\
 file_regexp     =   '.*_25T?.TXT'
 file_extension  =   '.TXT'
 
-file = '\Measurements\data of 26-8-2014\data no zeros\G0S1.txt'
+file = 'Measurements\data of 26-8-2014\data no zeros\G0S1.txt'
 filename = os.path.join(dir, file)
-df = pd.read_csv(file, sep='\t', header=1).astype(float)
+df = pd.read_csv(filename, sep='\t', header=1).astype(float)
 
