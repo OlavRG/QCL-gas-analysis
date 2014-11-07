@@ -15,6 +15,7 @@
 import os
 import pandas as pd
 
+if os.path.dirname(os.path.abspath('__file__')) == os.getcwd()
 dir = os.path.dirname(os.path.dirname(os.path.abspath('__file__')))
 os.chdir(dir)
 
