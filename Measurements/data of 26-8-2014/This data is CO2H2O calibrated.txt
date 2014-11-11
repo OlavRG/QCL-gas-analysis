@@ -1,0 +1,1 @@
+And the 'no zeros' should be the data used for further processing.
