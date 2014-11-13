@@ -30,7 +30,7 @@
 % v1.0 (20-02-2014)  First operation version - Calibration by parts
  
 %% Function declaration
-function [ output1 ] = Acetone_and_H2O_Determination(input1, input2)
+function [ output1, output2, output3 ] = Acetone_and_H2O_Determination(input1, input2)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -43,9 +43,9 @@ interaction_length = 54.36; %Interaction length between laser and sample in mete
 if exist('Database_H2O_and_Acetone.mat','file') == 2
     %load the calibration file
     database_info = load('Database_H2O_and_Acetone.mat');
-    database_wavenumber = database_info.Database_H2O_and_Acetone.wavenumber(1:2205);
-    database_H2O = database_info.Database_H2O_and_Acetone.H2O_base10_1ppm(1:2205) * interaction_length; % H2O database intensity for 1 ppm and the defined interaction length
-    database_acetone = database_info.Database_H2O_and_Acetone.Acetone_base10_1ppm (1:2205) * interaction_length; % acetone database intensity for 1 ppm and the defined interaction length
+    database_wavenumber = database_info.Database_H2O_and_Acetone.wavenumber;
+    database_H2O = database_info.Database_H2O_and_Acetone.H2O_base10_1ppm * interaction_length; % H2O database intensity for 1 ppm and the defined interaction length
+    database_acetone = database_info.Database_H2O_and_Acetone.Acetone_base10_1ppm * interaction_length; % acetone database intensity for 1 ppm and the defined interaction length
 else
     database_wavenumber = 0;
 end
@@ -60,12 +60,14 @@ C_initial = [1e3 1]; %Initial concentration guess. 1000 ppm for H2O and 1 ppm fo
 
 %% Part 2: Optimize the concentrations. Use the least squared algorithm
 
-C_optimized = lsqnonlin(func,C_initial,[],[], options);
+[C_optimized,resnorm,residual] = lsqnonlin(func,C_initial,[],[], options);
 
 
 %% Output
 % 
  output1 = C_optimized;
+ output2 = resnorm;
+ output3 = residual;
 
 
 end

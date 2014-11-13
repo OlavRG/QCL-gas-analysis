@@ -8,7 +8,8 @@
 %       file_extension
 %       p_region
 %       compound_region
-%   Absorbances.mat   absorbance measurements of all samples
+%   Absorbances.mat   absorbance measurements of all samples (output by CO2
+%   calibration script)
 %   Standard compound files and path
 %   compound files of compounds in compound_region
 

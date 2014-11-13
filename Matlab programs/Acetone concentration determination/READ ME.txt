@@ -1,0 +1,1 @@
+Main script seems to be Acetone_Concentration_Determination_Multicomponent_Analysis.m, with all other scripts/data dependencies of this. MAIN.m loads the appropriate input and runs Acetone_Concentration_Determination_Multicomponent_Analysis.m.
