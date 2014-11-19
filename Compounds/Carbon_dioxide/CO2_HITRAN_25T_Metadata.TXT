@@ -1,0 +1,4 @@
+# Absorption coefficients (cm-1)
+# Gas mixture: Pure CO<sub>2</sub>
+# Wavenumber range: 800-1300 cm-1, T: 296 K, P: 1 atm, step: 0.01 cm-1, Contour: Voigt
+# WN,cm-1    Value (FORMAT F12.6,1X,E17.10)
