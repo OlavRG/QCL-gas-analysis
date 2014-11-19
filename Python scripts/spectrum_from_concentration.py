@@ -16,6 +16,7 @@ import os
 import sys
 import pandas as pd
 import re
+import numpy as np
 from lmfit import minimize, Parameters
 
 def main():
@@ -40,11 +41,12 @@ if __name__ == '__main__':
 cwd=os.getcwd()
 
 # Load standard compounds
-wavelength = pd.read_csv(compound_file_path, sep='\t', header=0).astype(float)
+wavenumber = pd.read_csv(cwd + '\\Measurements\\Wavenumber.txt', sep='\t', header=None).astype(float)
 interaction_length = 54.36
 compound_all_folder   =   '\\Compounds\\'
 file_regexp     =   re.compile('.*_25T?.TXT').search
 compound_all_list = os.listdir(cwd+compound_all_folder)
+compound = pd.DataFrame()
 for ii in compound_all_list:
     compound_folder = cwd+compound_all_folder+ii
     compound_file_list = os.listdir(compound_folder)
@@ -52,7 +54,8 @@ for ii in compound_all_list:
         if file_regexp(l):
             compound_file = file_regexp(l).group(0)
             compound_file_path= os.path.join(compound_folder, compound_file)
-            G0S1 = pd.read_csv(compound_file_path, sep='\t', header=0).astype(float)
+            compound_temp = pd.read_csv(compound_file_path, sep='\s*', header=None).astype(float)
+            compound = compound.append(compound_temp, ignore_index=True)
         #for m in (file_regexp(l),):
 
         #    print m
@@ -66,9 +69,6 @@ for ii in compound_all_list:
 file = 'Measurements\data of 26-8-2014\data no zeros\G0S1.txt'
 filename = os.path.join(cwd, file)
 G0S1 = pd.read_csv(filename, sep='\t', header=1).astype(float)
-
-
-
 
 
 def residual(params, x, data, eps_data):
