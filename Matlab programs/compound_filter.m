@@ -7,6 +7,8 @@
 % directory
 
 clear all
+cd('H:\My Documents\GitHub\QCL-gas-analysis');
+addpath(genpath('H:\My Documents\GitHub\QCL-gas-analysis\Matlab programs'));
 % Find from STANDARD_COMPOUND_PATH all the compounds that at some point have
 % a value of minimum_absorbance
     file_regexp     =   '.*_25T?.TXT';
@@ -22,9 +24,12 @@ clear all
     assumed_concentration = 0.001; % in ppmv
     INTERACTION_LENGTH = 1; % in meter
 
-    compoundPathFileList      =   cellstr(ls(STANDARD_COMPOUND_PATH));
-    compoundPathFileList      =   compoundPathFileList(3:end,1);
+%     compoundPathFileList      =   cellstr(ls(STANDARD_COMPOUND_PATH));
+%     compoundPathFileList      =   compoundPathFileList(3:end,1);
+    load('H:\My Documents\GitHub\QCL-gas-analysis\Breath molecules_2.mat')
+    compoundPathFileList      =   match_Volatinome_PNNL(:,2);
 
+    
     standardCompoundDir  =   cell(length(compoundPathFileList),1);
     database_compounds_all   =   zeros(length(wavenumber),length(compoundPathFileList));
     nStandardCompound=0;
@@ -37,7 +42,7 @@ clear all
     for k=1:length(compoundPathFileList)
         standardCompoundDir{k,1}    =   cellstr(ls(fullfile(STANDARD_COMPOUND_PATH, ... 
             compoundPathFileList{k}(1:end))));
-        standardFileName   =   strjoin(regexp(standardCompoundDir{k,1},file_regexp,'match'),'');
+        standardFileName   =   strjoin(regexpi(standardCompoundDir{k,1},file_regexp,'match'),'');
         if isempty(standardFileName) == 1
             nEmpty1=nEmpty1+1;
             indexEmptyFolder1(nEmpty1)     =   k;
@@ -77,6 +82,7 @@ clear all
     indexEmptyFolder2(indexEmptyFolder2==0) = [];
     if exist('indexEmptyFolder2','var') 
         filteredCompoundList(indexEmptyFolder2)=[];
+        database_compounds_all3(:,indexEmptyFolder2)=[];
     end
-
+save compounds_twice_filtered.mat database_compounds_all3 filteredCompoundList
     
