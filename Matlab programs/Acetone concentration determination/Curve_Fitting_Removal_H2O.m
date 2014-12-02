@@ -29,7 +29,7 @@
 %
 % v1.0 (20-02-2014)  First operation version - Calibration by parts
 % v2.0 (05-03-2014)  Calibration using peakfinder - Adonis Reyes
-% v2.1 (07-03-2014)  Interpolation of Calibrated absrobance - Adonis Reyes
+% v2.1 (07-03-2014)  Interpolation of Calibrated absorbance - Adonis Reyes
 
  
 %% Function declaration
