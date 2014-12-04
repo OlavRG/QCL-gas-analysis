@@ -100,4 +100,12 @@ addpath(genpath('H:\My Documents\GitHub\QCL-gas-analysis\Matlab programs'));
         filteredCompoundList(indexEmptyFolder2)=[];
     end
 % save compounds_twice_filtered.mat absorptivity_all_compounds_filtered filteredCompoundList wavenumber
-    
+
+% Also write the variables to .txt files for processing outside of MATLAB
+% dlmwrite('absorptivity_all_compounds_filtered.txt',absorptivity_all_compounds_filtered,'precision','%.15E','delimiter','\t');
+% fileID1=fopen('filteredCompoundList.txt','w')
+% [rowCompList, colCompList] = size(filteredCompoundList);
+% for row=1:rowCompList
+%     fprintf(fileID1,'%s\n', filteredCompoundList{row,:});
+% end
+% fclose(fileID1);

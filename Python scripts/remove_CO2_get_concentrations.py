@@ -4,6 +4,7 @@
 
 # TODO:
 # - get script working
+# - for performance: use numpy array instead of dataframe
 # - use while loop to get to right directory in main()
 
 import os
@@ -34,8 +35,8 @@ if __name__ == '__main__':
 cwd=os.getcwd()
 
 
-# Get absorbance .txt input to dataframes
-# Load measurements
+# Load measurements (G0S1.txt) and wavenumbers to dataframes
+wavenumber = list(np.loadtxt('Measurements\Wavenumber.txt').astype(str))
 breath_spectrum = []
 breath_spectrum_folder = 'Measurements\data of 26-8-2014\data no zeros\\'
 breath_spectrum_file_list = os.listdir(breath_spectrum_folder)
@@ -48,9 +49,11 @@ healthy = breath_spectrum[0].append(breath_spectrum[1]).T # transpose back to sa
 asthma = breath_spectrum[4].append(breath_spectrum[5]).T
 
 
+# Load list of compound names
 
 # Get database absorbance .txt input to dataframes
 #   interpolation
+
 
 # Non-linear least squares regression
 
