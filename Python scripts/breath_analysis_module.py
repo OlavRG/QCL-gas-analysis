@@ -44,6 +44,7 @@ def lsqnonlin(absorbance, absorptivity_database_molecule_all, concentration_init
     xdata = absorptivity_database_molecule_all * interaction_length
     ydata = absorbance
     popt, pcov = curve_fit(func, xdata, ydata, concentration_initial)
+    return popt, pcov
 
 if __name__ == '__main__':
 # Test for load_database_compound
@@ -53,4 +54,4 @@ if __name__ == '__main__':
     #bla = load_database_compound(wavenumber,compound_path)#
 
 # Test lsqnonlin
-    bla2 = lsqnonlin()
+    #bla2 = lsqnonlin()

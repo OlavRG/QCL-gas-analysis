@@ -12,6 +12,7 @@ import sys
 import pandas as pd
 import re
 import numpy as np
+import breath_analysis_module as bam
 
 def main():
     # Set the cwd assuming cwd is 'Breath Analysis' or one folder deeper.
@@ -37,28 +38,35 @@ cwd=os.getcwd()
 
 # Load measurements (G0S1.txt) and wavenumbers to dataframes
 wavenumber = list(np.loadtxt('Measurements\Wavenumber.txt').astype(str))
-breath_spectrum = np.array([])
+breath_spectrum = np.empty((len(wavenumber),0))
 breath_spectrum_folder = 'Measurements\data of 26-8-2014\data no zeros\\'
 breath_spectrum_file_list = os.listdir(breath_spectrum_folder)
+spectrum_shape = ()
 for ii in breath_spectrum_file_list:
     breath_spectrum_file_path = os.path.join(cwd,breath_spectrum_folder,ii)
     breath_spectrum_temp = np.loadtxt(breath_spectrum_file_path, skiprows=1) # Later append requires transpose
+    breath_spectrum = breath_spectrum[:len(breath_spectrum_temp)] if (ii==breath_spectrum_file_list[0]) else breath_spectrum
+    spectrum_shape = spectrum_shape + breath_spectrum_temp.shape
     breath_spectrum = np.append(breath_spectrum, breath_spectrum_temp, axis=1)
 
-    #breath_spectrum_temp = pd.read_table(breath_spectrum_file_path).astype(float).T # Later append requires transpose
-    #breath_spectrum.append(breath_spectrum_temp)
-#
-#healthy = breath_spectrum[0].append(breath_spectrum[1])#.T # transpose back to samples in columns
-#asthma = breath_spectrum[4].append(breath_spectrum[5])#.T
-#
+healthy_col1 = spectrum_shape[1] + spectrum_shape[3]
+healthy_col2 = healthy_col1 + spectrum_shape[5] + spectrum_shape[7]
+asthma_col = healthy_col2 + spectrum_shape[9] + spectrum_shape[11]
+healthy = breath_spectrum[:,:healthy_col1]
+asthma = breath_spectrum[:,healthy_col2:asthma_col]
 
-# Load list of compound names
+# Load list of compound names 
 
 # Get database absorbance .txt input to dataframes
 #   interpolation
-
+# 
+molecule_list = np.loadtxt(cwd + '\\Output\\compound_filter\\absorptivity_all_compounds_filtered.txt')
+molecule_list = molecule_list[:len(breath_spectrum_temp),:]
 
 # Non-linear least squares regression
+concentration_initial = np.ones(molecule_list.shape[1])
+interaction_length = 54.36
+bla = bam.lsqnonlin(healthy[:,0],molecule_list,concentration_initial,interaction_length)
 
 # Get CO2 peak wavenumbers, intensity, indices
 
