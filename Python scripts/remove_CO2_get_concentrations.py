@@ -37,17 +37,20 @@ cwd=os.getcwd()
 
 # Load measurements (G0S1.txt) and wavenumbers to dataframes
 wavenumber = list(np.loadtxt('Measurements\Wavenumber.txt').astype(str))
-breath_spectrum = []
+breath_spectrum = np.array([])
 breath_spectrum_folder = 'Measurements\data of 26-8-2014\data no zeros\\'
 breath_spectrum_file_list = os.listdir(breath_spectrum_folder)
 for ii in breath_spectrum_file_list:
     breath_spectrum_file_path = os.path.join(cwd,breath_spectrum_folder,ii)
-    breath_spectrum_temp = pd.read_table(breath_spectrum_file_path).astype(float).T # Later append requires transpose
-    breath_spectrum.append(breath_spectrum_temp)
+    breath_spectrum_temp = np.loadtxt(breath_spectrum_file_path, skiprows=1) # Later append requires transpose
+    breath_spectrum = np.append(breath_spectrum, breath_spectrum_temp, axis=1)
 
-healthy = breath_spectrum[0].append(breath_spectrum[1]).T # transpose back to samples in columns
-asthma = breath_spectrum[4].append(breath_spectrum[5]).T
-
+    #breath_spectrum_temp = pd.read_table(breath_spectrum_file_path).astype(float).T # Later append requires transpose
+    #breath_spectrum.append(breath_spectrum_temp)
+#
+#healthy = breath_spectrum[0].append(breath_spectrum[1])#.T # transpose back to samples in columns
+#asthma = breath_spectrum[4].append(breath_spectrum[5])#.T
+#
 
 # Load list of compound names
 

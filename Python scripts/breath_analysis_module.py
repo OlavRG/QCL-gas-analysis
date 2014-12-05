@@ -1,11 +1,15 @@
-# 
 
+
+import profile
 import numpy as np
 from scipy import interpolate
 from scipy.optimize import curve_fit
 
 
 # load_database_compound loads database compounds and fits them to wavenumber
+# Gives exact same result as my load_compound.m up to 16th significant figure, 
+# however this function sometimes has 16 and sometimes 17 significant figures, 
+# whereas the MATLAB version always has 16.
 def load_database_compound(wavenumber, compound_path):
     compound1 = np.loadtxt(compound_path)
     
@@ -34,18 +38,19 @@ def load_database_compound(wavenumber, compound_path):
     
     
     
-def lsqnonlin(absorbance, molecule_list, concentration_initial, interaction_length):
+def lsqnonlin(absorbance, absorptivity_database_molecule_all, concentration_initial, interaction_length):
     def func(absorptivity_length, C):
-        return absorptivity_length * C
-    
-    load_database_compound(wavenumber, compound_path)
-    xdata = absorptivity_database_compound_all * interaction_length
+        absorptivity_length*C
+    xdata = absorptivity_database_molecule_all * interaction_length
     ydata = absorbance
     popt, pcov = curve_fit(func, xdata, ydata, concentration_initial)
 
 if __name__ == '__main__':
+# Test for load_database_compound
     #wavenumber = np.loadtxt('D:\Workspace\Breath Analysis\Measurements\Wavenumber.txt').astype(float)
     #compound_path = 'D:\Workspace\Breath Analysis\Compounds\Acetone\ACETONE_25T.TXT'
-    #bla = load_database_compound(wavenumber,compound_path)
-    
-    molecule_list =   list(np.loadtxt('Measurements\Wavenumber.txt').astype(str))
+    ##bla = profile.run('load_database_compound(wavenumber,compound_path)') #
+    #bla = load_database_compound(wavenumber,compound_path)#
+
+# Test lsqnonlin
+    bla2 = lsqnonlin()
