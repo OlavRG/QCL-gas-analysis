@@ -1,8 +1,12 @@
 clear 'filestring' 'fid' 'tmp' 
 
+% Stated run times are in seconds on the TU pc in the students room of
+% Optics
+
 tic
 for k=1:5
 filestring='L:\IST\OP\scratch\Olav Grouwstra\Compounds\Carbon_monoxide\CO_25T.TXT';
+
 
 % 0.39
 % tmp=load(filestring);
