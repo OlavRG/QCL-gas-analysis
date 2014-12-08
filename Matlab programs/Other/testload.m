@@ -28,6 +28,9 @@ fid = fopen(filestring);
 tmp = textscan(fid, '%f %f');
 fclose(fid);
 
+
+% load_compound(filestring);
+
 time=toc;
 disp([num2str(time) ' ' num2str(k) ' out of 5']) 
 end

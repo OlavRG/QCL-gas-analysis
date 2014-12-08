@@ -33,8 +33,10 @@ clear all
     file_regexp     =   '.*_25T?.TXT';
     file_extension  =   '.TXT';
 % Set indices of folders of compounds to use
+    compound_list   =   cellstr(ls(compound_path));
+    compound_list   =   compound_list(3:end,1);
     lower_compound_index    =   1;
-    upper_compound_index    =   432;%length(compound_list);
+    upper_compound_index    =   length(compound_list);%length(compound_list);
 
         
 % load and analyse dataset, load p values and corresponding wavenumber vector
@@ -42,9 +44,13 @@ clear all
 %         'raw_matlab.mat'];
 %     [healthy_mean_std, asthma_mean_std, cysticF_mean_std]  =    ...
 %         Mean_std_analysis(path_to_raw_matlab);
-    pvalues=    importdata(['L:\IST\OP\scratch\Olav Grouwstra\Measurements\'...
-        'P-values of CO2H2O calibrated data\'...
-        'raw.quantile.healthy.vs.asthma.alldata.26-8-2014.no zeros.csv'],'\t',1);
+%     pvalues=    importdata(['L:\IST\OP\scratch\Olav Grouwstra\Measurements\'...
+%         'P-values of CO2H2O calibrated data\'...
+%         'raw.quantile.healthy.vs.asthma.alldata.26-8-2014.no zeros.csv'],'\t',1);
+    pvalues=    importdata(['H:\My Documents\GitHub\QCL-gas-analysis\'...
+        'Measurements\P-values of CO2H2O calibrated data\'...
+        'raw.MAD.healthy.vs.CF.alldata.csv'],',',1);
+
     wavenumber= load('L:\IST\OP\scratch\Olav Grouwstra\Measurements\Wavenumber.txt');
     
 % Determine indices of wavenumber regions of at least min_p_region 
@@ -86,8 +92,6 @@ clear all
     compound_region{1,1}    =   ['Compounds\Wavenumber cm-1'];
 
 % Get list of the folders in which compound files are located
-    compound_list   =   cellstr(ls(compound_path));
-    compound_list   =   compound_list(3:end,1);
     index_start     =   zeros(compound_amount,length(ind_filtered_begin));
     index_end     =   zeros(compound_amount,length(ind_filtered_begin));
     
@@ -110,8 +114,14 @@ clear all
         if isempty(file_name) == 1
         
         else
-            load([compound_path compound_list{k}(1:end) '\' file_name]);
-            compound_copy    =   eval(regexprep(file_name,file_extension,''));
+%             load([compound_path compound_list{k}(1:end) '\' file_name]);
+            fid = fopen([compound_path compound_list{k}(1:end) '\' file_name]);
+            compound_copy = textscan(fid, '%f %f');
+            fclose(fid);
+            compound_copy = cell2mat(compound_copy);
+%             file_name_wo_ext = regexprep(file_name,file_extension,'');
+%             var_name = regexprep(file_name_wo_ext,'(^[0-9]\w+)','X$1');
+%             compound_copy    =   eval(regexprep(var_name,file_extension,''));
             compound_region{k+1,1}  =   compound_list{k};
             for j=1:length(ind_filtered_begin)
                 compound_region{1,j+1}      =   [num2str(p_region{j}(1)) '-' ... 
@@ -141,7 +151,7 @@ clear all
     end
 
 % Save variables for Concentration_determination.m
-save HA_compound_region.mat compound_region p_region compound_path file_regexp ...
+save raw.MAD.healthy.vs.CF.alldata.alldata_compound_region.mat compound_region p_region compound_path file_regexp ...
     file_extension
     
 toc
