@@ -15,9 +15,9 @@
 
 
 % Dependencies:
-% strjoin (Caution: not the standard matlab strjoin.)
+% strjoin (CAUTION: not the standard matlab strjoin.)
 
-addpath(genpath('L:\IST\OP\scratch\Olav Grouwstra\Matlab programs\HealthyAsthmaCF analysis\strjoin'))
+addpath(genpath('D:\Workspace\Breath Analysis\Matlab programs\HealthyAsthmaCF analysis\strjoin'))
 
 tic;
 close all
@@ -26,10 +26,10 @@ clear all
 % Declare variables
     max_p           =   0.05;
     min_p_region    =   10;
-    min_intensity   =   10^(-4);
+    min_intensity   =   10^(-6);
     interaction_length = 54.36; % in meters
-    compound_path   =   ['L:\IST\OP\scratch\Adonis\Databases\' ... 
-        'PNNL Database\Compounds\'];
+    compound_path   =   'W:\';%['L:\IST\OP\scratch\Adonis\Databases\' ... 
+        %'PNNL Database\Compounds\'];
     file_regexp     =   '.*_25T?.TXT';
     file_extension  =   '.TXT';
 % Set indices of folders of compounds to use
@@ -47,11 +47,11 @@ clear all
 %     pvalues=    importdata(['L:\IST\OP\scratch\Olav Grouwstra\Measurements\'...
 %         'P-values of CO2H2O calibrated data\'...
 %         'raw.quantile.healthy.vs.asthma.alldata.26-8-2014.no zeros.csv'],'\t',1);
-    pvalues=    importdata(['H:\My Documents\GitHub\QCL-gas-analysis\'...
+    pvalues=    importdata(['D:\Workspace\Breath Analysis\'...
         'Measurements\P-values of CO2H2O calibrated data\'...
         'raw.MAD.healthy.vs.CF.alldata.csv'],',',1);
 
-    wavenumber= load('L:\IST\OP\scratch\Olav Grouwstra\Measurements\Wavenumber.txt');
+    wavenumber= load('D:\Workspace\Breath Analysis\Measurements\Wavenumber.txt');
     
 % Determine indices of wavenumber regions of at least min_p_region 
 % consecutive p-values < max_p
@@ -110,8 +110,8 @@ clear all
     for k=lower_compound_index:upper_compound_index
         compound_dir{k,1}    =   cellstr(ls(fullfile(compound_path, ... 
             compound_list{k}(1:end))));
-        file_name   =   strjoin(regexp(compound_dir{k,1},file_regexp,'match'),'');
-        if isempty(file_name) == 1
+        file_name   =   strjoin(regexp(compound_dir{k,1},file_regexp,'match'),''); 
+        if isempty(file_name) == 1      %Above line FAILS when using MATLAB's strjoin
         
         else
 %             load([compound_path compound_list{k}(1:end) '\' file_name]);
@@ -149,9 +149,9 @@ clear all
         end
     [rows_compound_region,cols_compound_region]    =   size(compound_region);
     end
-
+beep
 % Save variables for Concentration_determination.m
-save raw.MAD.healthy.vs.CF.alldata.alldata_compound_region.mat compound_region p_region compound_path file_regexp ...
-    file_extension
-    
+% save raw.MAD.healthy.vs.CF.alldata.alldata_compound_region_min_int_E-6.mat compound_region p_region compound_path file_regexp ...
+%     file_extension
+%     
 toc
