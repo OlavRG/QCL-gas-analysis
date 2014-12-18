@@ -47,7 +47,7 @@ def lsqnonlin(absorbance, absorptivity_database_molecule_all, concentration_init
     popt, pcov = curve_fit(func, xdata, ydata, concentration_initial)
     return popt, pcov
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
 # Test for load_database_compound
     #wavenumber = np.loadtxt('D:\Workspace\Breath Analysis\Measurements\Wavenumber.txt').astype(float)
     #compound_path = 'D:\Workspace\Breath Analysis\Compounds\Acetone\ACETONE_25T.TXT'
@@ -55,4 +55,4 @@ if __name__ == '__main__':
     #bla = load_database_compound(wavenumber,compound_path)#
 
 # Test lsqnonlin
-    #bla2 = lsqnonlin()
+# bla2 = lsqnonlin()

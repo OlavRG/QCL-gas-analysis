@@ -36,7 +36,7 @@ if __name__ == '__main__':
 cwd=os.getcwd()
 
 
-# Load measurements (G0S1.txt) and wavenumbers to dataframes
+# Load measurements (G0S1.txt) and wavenumbers to arrays
 wavenumber = list(np.loadtxt('Measurements\Wavenumber.txt').astype(str))
 breath_spectrum = np.empty((len(wavenumber),0))
 breath_spectrum_folder = 'Measurements\data of 26-8-2014\data no zeros\\'
