@@ -37,31 +37,20 @@ cwd=os.getcwd()
 
 
 # Load measurements (G0S1.txt) and wavenumbers to arrays
-wavenumber = list(np.loadtxt('Measurements\Wavenumber.txt').astype(str))
-breath_spectrum = np.empty((len(wavenumber),0))
-breath_spectrum_folder = 'Measurements\data of 26-8-2014\data no zeros\\'
-breath_spectrum_file_list = os.listdir(breath_spectrum_folder)
-spectrum_shape = ()
-for ii in breath_spectrum_file_list:
-    breath_spectrum_file_path = os.path.join(cwd,breath_spectrum_folder,ii)
-    breath_spectrum_temp = np.loadtxt(breath_spectrum_file_path, skiprows=1) # Later append requires transpose
-    breath_spectrum = breath_spectrum[:len(breath_spectrum_temp)] if (ii==breath_spectrum_file_list[0]) else breath_spectrum
-    spectrum_shape = spectrum_shape + breath_spectrum_temp.shape
-    breath_spectrum = np.append(breath_spectrum, breath_spectrum_temp, axis=1)
+breath_spectrum_folder = 'Measurements\\data of 26-8-2014\\data no zeros\\'
+healthy = bam.load_measurement(breath_spectrum_folder, 0, 2)
+asthma = bam.load_measurement(breath_spectrum_folder, 1, 2)
 
-healthy_col1 = spectrum_shape[1] + spectrum_shape[3]
-healthy_col2 = healthy_col1 + spectrum_shape[5] + spectrum_shape[7]
-asthma_col = healthy_col2 + spectrum_shape[9] + spectrum_shape[11]
-healthy = breath_spectrum[:,:healthy_col1]
-asthma = breath_spectrum[:,healthy_col2:asthma_col]
+wavenumber = list(np.loadtxt(os.path.join('Measurements','Wavenumber.txt')).astype(str))
+wavenumber = wavenumber[:healthy.shape[0]]
+
 
 # Load list of compound names 
 
 # Get database absorbance .txt input to dataframes
 #   interpolation
-# 
 molecule_list = np.loadtxt(cwd + '\\Output\\compound_filter\\absorptivity_all_compounds_filtered.txt')
-molecule_list = molecule_list[:len(breath_spectrum_temp),:]
+molecule_list = molecule_list[:len(wavenumber),:]
 
 # Non-linear least squares regression
 concentration_initial = np.ones(molecule_list.shape[1])

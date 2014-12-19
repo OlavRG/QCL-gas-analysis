@@ -6,6 +6,18 @@ import numpy as np
 from scipy import interpolate
 from scipy.optimize import curve_fit
 
+def load_measurement(measurement_folder, group, sample_max):
+    group = 0
+    sample_max = 2
+    measurement_folder = "D:\\Workspace\\Breath Analysis\\Measurements\\data of 26-8-2014\\data no zeros\\"
+    measurement = []
+    for smpl in range(1, sample_max+1):
+        measurement_file = measurement_folder + 'G%dS%d.txt' % (group, smpl)
+        measurement_temp = np.loadtxt(measurement_file, skiprows=1)
+        measurement.append(measurement_temp)
+    measurement = np.concatenate(measurement,1)
+    
+    return measurement
 
 # load_database_compound loads database compounds and fits them to wavenumber
 # Gives exact same result as my load_compound.m up to 16th significant figure, 
@@ -40,8 +52,9 @@ def load_database_compound(wavenumber, compound_path):
     
     
 def lsqnonlin(absorbance, absorptivity_database_molecule_all, concentration_initial, interaction_length):
-    def func(absorptivity_length, C):
-        absorptivity_length*C
+    def func(absorptivity_length, *C):
+        import numpy as np
+        return np.dot(absorptivity_length,C)
     xdata = absorptivity_database_molecule_all * interaction_length
     ydata = absorbance
     popt, pcov = curve_fit(func, xdata, ydata, concentration_initial)
@@ -56,3 +69,9 @@ def lsqnonlin(absorbance, absorptivity_database_molecule_all, concentration_init
 
 # Test lsqnonlin
 # bla2 = lsqnonlin()
+
+#Test load_measurement
+    #group = 0
+    #sample_max = 2
+    #measurement_folder = "D:\\Workspace\\Breath Analysis\\Measurements\\data of 26-8-2014\\data no zeros\\"
+    #bla = load_measurement(measurement_folder, group, sample_max)
