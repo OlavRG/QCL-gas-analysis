@@ -1,0 +1,1 @@
+Water and CO2 are taken from HITRAN database, the rest from PNNL

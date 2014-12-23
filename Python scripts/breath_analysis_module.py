@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 
 
 import profile
@@ -7,8 +7,8 @@ from scipy import interpolate
 from scipy.optimize import curve_fit
 
 def load_measurement(measurement_folder, group, sample_max):
-    group = 0
-    sample_max = 2
+    #group = 0
+    #sample_max = 2
     measurement_folder = "D:\\Workspace\\Breath Analysis\\Measurements\\data of 26-8-2014\\data no zeros\\"
     measurement = []
     for smpl in range(1, sample_max+1):
