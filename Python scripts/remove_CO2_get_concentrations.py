@@ -1,5 +1,8 @@
 # 1. Get concentrations of molecules by using nonlinear least squares fitting.
+    # Check if it matches with lsqnonlin of MATLAB
+    # Only those concentrations of the 12 main molecules
 # 2. Subtract all absorbances except that of the CO2 molecule from the measurement.
+    # Subtract only those concentrations of the 12 main molecules
 # 3. Fit Voigth peaks to CO2-only spectrum. Now subtract those from total spectrum
 
 # TODO:
@@ -55,7 +58,7 @@ molecule_list = molecule_list[:len(wavenumber),:]
 # Non-linear least squares regression
 concentration_initial = np.ones(molecule_list.shape[1])
 interaction_length = 54.36
-bla = bam.lsqnonlin(healthy[:,0],molecule_list,concentration_initial,interaction_length)
+popt, pcov = bam.lsqnonlin(healthy[:,0],molecule_list,concentration_initial,interaction_length)
 
 # Get CO2 peak wavenumbers, intensity, indices
 
