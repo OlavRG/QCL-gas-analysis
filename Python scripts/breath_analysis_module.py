@@ -5,6 +5,7 @@ import profile
 import numpy as np
 from scipy import interpolate
 from scipy.optimize import curve_fit
+import peakdetect as pdet
 
 def load_measurement(measurement_folder, group, sample_max):
     #group = 0
@@ -53,12 +54,31 @@ def load_database_compound(wavenumber, compound_path):
     
 def lsqnonlin(absorbance, absorptivity_database_molecule_all, concentration_initial, interaction_length):
     def func(absorptivity_length, *C):
-        import numpy as np
         return np.dot(absorptivity_length,C)
     xdata = absorptivity_database_molecule_all * interaction_length
     ydata = absorbance
     popt, pcov = curve_fit(func, xdata, ydata, concentration_initial)
     return popt, pcov
+
+
+def fit_remove_molecule(absorbance, peakwidth, mlcl, wavenumber, look, Delta):
+    mlcl_peaks, mlcl_valleys = pdet.peakdetect(mlcl, lookahead = look, delta = Delta)
+    peak_index, peak_height = zip(*mlcl_peaks)
+
+    def gauss_func(peak_x, a, x0, sigma):
+        return a*np.exp(-(peak_x-x0)**2/(2*sigma**2))
+
+    for ind in peak_index:
+        peak_range = range(ind-peakwidth,ind+peakwidth)
+        peak_x = wavenumber[peak_range]
+        peak_y = absorbance[peak_range]
+        len_x = len(peak_x)
+        mean = sum(peak_x*peak_y)/len_x
+        sigma = sum(peak_y*(peak_x-mean)**2)/len_x
+        popt, pcov = curve_fit(gauss_func, peak_x, peak_y, p0 = [1, mean, sigma])
+        absorbance[ind-peakwidth:ind+peakwidth] = absorbance[ind-peakwidth:ind+peakwidth] - gauss_func(peak_x, popt)
+    
+    return peak_x, peak_y, peak_index
 
 #if __name__ == '__main__':
 # Test for load_database_compound
