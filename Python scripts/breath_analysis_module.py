@@ -68,20 +68,22 @@ def fit_remove_molecule(absorbance, peakwidth, mlcl, wavenumber, look, Delta):
     def gauss_func(peak_x, a, x0, sigma):
         return a*np.exp(-(peak_x-x0)**2/(2*sigma**2))
     
+    new_absorbance = absorbance
+    noise = 2.5*np.mean(np.abs(absorbance)) # (arbitraty) estimation of ground noise
     for ind in peak_index:
         peak_range = range(ind-peakwidth,ind+peakwidth)
         peak_x = wavenumber[peak_range]
         peak_y = absorbance[peak_range]
-        if max(peak_y) >= 0.04:
+        if max(peak_y) >= noise: #0.04:  Pick a value that is above ground noise of absorbance
             len_x = len(peak_x)
             mean = wavenumber[ind]
             sigma = np.sqrt(np.dot(peak_x-mean,peak_x-mean)/len_x)
-    #        sigma = sum(peak_y*(peak_x-mean)**2)/len_x
-            popt, pcov = curve_fit(gauss_func, peak_x, peak_y, p0 = [0.02, mean, sigma])
+            magnitude = np.mean(peak_y)
+            popt, pcov = curve_fit(gauss_func, peak_x, peak_y, p0 = [magnitude, mean, sigma])
             y_fit = gauss_func(peak_x, *popt)
-            absorbance[ind-peakwidth:ind+peakwidth] = absorbance[ind-peakwidth:ind+peakwidth] - y_fit        
+            new_absorbance[ind-peakwidth:ind+peakwidth] = absorbance[ind-peakwidth:ind+peakwidth] - y_fit        
     
-    return absorbance
+    return new_absorbance
 
 #if __name__ == '__main__':
 # Test for load_database_compound

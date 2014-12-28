@@ -86,42 +86,46 @@ molecule_list_rel = [os.path.relpath(mol,os.path.commonprefix(molecule_list)) fo
 # Get concentrations using non-linear least squares regression
 conc_init = np.ones(standard_compound.shape[1])
 gas_length = 54.36
-popt, pcov = bam.lsqnonlin(abs_meas, standard_compound, conc_init, gas_length)
+conc_opt1, pcov = bam.lsqnonlin(abs_meas, standard_compound, conc_init, gas_length)
 
 # Remove non-CO2 from absorbance
-standard_absorbance = standard_compound * popt * gas_length
+standard_absorbance = standard_compound * conc_opt1 * gas_length
 standard_absorbance_noCO2 = standard_absorbance
 for idx, val in enumerate(molecule_list_rel):
     if 'Carbon_dioxide' in val:
         standard_absorbance_noCO2 = np.delete(standard_absorbance,idx,1)
-#        bla = pdet.peakdetect(standard_absorbance[:,idx], wavenumber, lookahead = 10, delta = 0.01)
-
+        CO2_index = idx
+        
 abs_meas_onlyCO2 = abs_meas - np.sum(standard_absorbance_noCO2,1)
 
-abs_remove_CO2 = bam.fit_remove_molecule(abs_meas_onlyCO2, 10, standard_compound[:,4],wavenumber, 10, 0.0002)
+# Gets CO2 peak using peakdetect, then fits gaussians to them and remove them
+abs_remove_all = bam.fit_remove_molecule(abs_meas_onlyCO2, 10, standard_compound[:,CO2_index],wavenumber, 10, 0.0002)
 
-abs_remove_CO2 = abs_remove_CO2 + np.sum(standard_absorbance_noCO2,1)
-
-
-# Get CO2 peak wavenumbers, intensity, indices
-
-# (Optional peakfinder)
-
-# Fit a gauss to a wavenumber+intensity region
+# Add all non CO2 molecules back to the measurement
+abs_remove_CO2 = abs_remove_all + np.sum(standard_absorbance_noCO2,1)
 
 # Again: Non-linear least squares regression
+conc_opt2, pcov = bam.lsqnonlin(abs_remove_CO2, standard_compound, conc_init, gas_length)
 
-## Plot absorbances
-#standard_absorbance = standard_compound * popt * gas_length
-#abs_plot = plt.plot(wavenumber, abs_meas, wavenumber, standard_absorbance)
-#absorbance_legend = molecule_list_rel
-#absorbance_legend.insert(0,'healthy')
-#plt.legend(abs_plot, absorbance_legend)
-#plt.show()
-#abs_meas_onlyCO2 = abs_meas - np.sum(standard_absorbance_noCO2,1)
+# (Re)state  variables for plotting
+abs_meas_onlyCO2 = abs_meas - np.sum(standard_absorbance_noCO2,1) # Restate this variable, somehow fit_remove_molecule changes this variable... 
 sum_st_abs = np.sum(standard_absorbance_noCO2,1)
 
-matplotlib.pyplot.close("all")
+plt.close("all")
 plotter = plt.plot(wavenumber,sum_st_abs,wavenumber,abs_meas,wavenumber,abs_meas_onlyCO2, wavenumber, standard_absorbance[:,4], wavenumber, abs_remove_CO2)
 plt.legend(plotter, ['summed_noCO2' ,'measurement','meas_onlyCO2', 'DB_CO2', 'abs_remove_CO2'])
 plt.show
+
+## Plot absorbances
+fig2 = plt.figure()
+standard_absorbance = standard_compound * conc_opt1 * gas_length
+standard_absorbance2 = standard_compound * conc_opt2 * gas_length
+abs_sp1 = fig2.add_subplot(211)
+abs_sp2 = fig2.add_subplot(212)
+abs_plot1 = abs_sp1.plot(wavenumber, abs_meas, wavenumber, standard_absorbance)
+abs_plot2 = abs_sp2.plot(wavenumber, abs_meas, wavenumber, standard_absorbance2)
+absorbance_legend = molecule_list_rel
+absorbance_legend.insert(0,'healthy')
+plt.legend(abs_plot1, absorbance_legend)
+#plt.legend(abs_plot2, absorbance_legend)
+plt.show()
