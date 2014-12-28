@@ -64,21 +64,23 @@ def lsqnonlin(absorbance, absorptivity_database_molecule_all, concentration_init
 def fit_remove_molecule(absorbance, peakwidth, mlcl, wavenumber, look, Delta):
     mlcl_peaks, mlcl_valleys = pdet.peakdetect(mlcl, lookahead = look, delta = Delta)
     peak_index, peak_height = zip(*mlcl_peaks)
-
+    
     def gauss_func(peak_x, a, x0, sigma):
         return a*np.exp(-(peak_x-x0)**2/(2*sigma**2))
-
+    
     for ind in peak_index:
         peak_range = range(ind-peakwidth,ind+peakwidth)
         peak_x = wavenumber[peak_range]
         peak_y = absorbance[peak_range]
-        len_x = len(peak_x)
-        mean = sum(peak_x*peak_y)/len_x
-        sigma = sum(peak_y*(peak_x-mean)**2)/len_x
-        popt, pcov = curve_fit(gauss_func, peak_x, peak_y, p0 = [1, mean, sigma])
-        absorbance[ind-peakwidth:ind+peakwidth] = absorbance[ind-peakwidth:ind+peakwidth] - gauss_func(peak_x, popt)
-    
-    return peak_x, peak_y, peak_index
+        if max(peak_y) >= 0.04:
+            len_x = len(peak_x)
+            mean = wavenumber[ind]
+            sigma = np.sqrt(np.dot(peak_x-mean,peak_x-mean)/len_x)
+            popt, pcov = curve_fit(gauss_func, peak_x, peak_y, p0 = [1, mean, sigma])
+            y_fit = gauss_func(peak_x, popt[0], popt[1], popt[2])
+            absorbance[ind-peakwidth:ind+peakwidth] = absorbance[ind-peakwidth:ind+peakwidth] - y_fit
+        
+        return absorbance
 
 #if __name__ == '__main__':
 # Test for load_database_compound

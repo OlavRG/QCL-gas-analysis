@@ -112,19 +112,21 @@ for ind in peak_index:
     peak_y = absorbance[peak_range]
     if max(peak_y) >= 0.04:
         len_x = len(peak_x)
-    #    mean = sum(peak_x*peak_y)/len_x
         mean = wavenumber[ind]
-    #    sigma = sum(peak_y*(peak_x-mean)**2)/len_x
-        sigma = np.sqrt(np.dot(peak_x-mean,peak_x-mean)/len_x)
+#        sigma = np.sqrt(np.dot(peak_x-mean,peak_x-mean)/len_x)
+        sigma = sum(peak_y*(peak_x-mean)**2)/len_x
         popt, pcov = curve_fit(gauss_func, peak_x, peak_y, p0 = [1, mean, sigma])
-        y_fit = gauss_func(peak_x, popt[0], popt[1], popt[2])
+        y_fit = gauss_func(peak_x, *popt)
         absorbance[ind-peakwidth:ind+peakwidth] = absorbance[ind-peakwidth:ind+peakwidth] - y_fit
+    if ind == peak_index[1]:
+        break
+    
 
 
-#bladiee1, bladiee2, lastpeak = bam.fit_remove_molecule(abs_meas_onlyCO2, 10, standard_compound[:,4],wavenumber, 10, 0.0002)
+#abs_remove_CO2 = bam.fit_remove_molecule(abs_meas_onlyCO2, 10, standard_compound[:,4],wavenumber, 10, 0.0002)
 
 matplotlib.pyplot.close("all")
-plt.plot(peak_x, peak_y)#, peak_x, y_fit)
+plt.plot(peak_x, peak_y, peak_x, y_fit)
 plt.figure()
 plt.show
 # Get CO2 peak wavenumbers, intensity, indices
@@ -142,8 +144,9 @@ plt.show
 #absorbance_legend.insert(0,'healthy')
 #plt.legend(abs_plot, absorbance_legend)
 #plt.show()
+abs_meas_onlyCO2 = abs_meas - np.sum(standard_absorbance_noCO2,1)
 
 sum_st_abs = np.sum(standard_absorbance_noCO2,1)
-plotter = plt.plot(wavenumber,sum_st_abs,wavenumber,abs_meas,wavenumber,abs_meas_onlyCO2, wavenumber, standard_absorbance[:,4], wavenumber, absorbance)
-plt.legend(plotter, ['summed_noCO2' ,'measurement','meas_onlyCO2', 'DB_CO2', 'abs_noCO2'])
+plotter = plt.plot(wavenumber,sum_st_abs,wavenumber,abs_meas,wavenumber,abs_meas_onlyCO2, wavenumber, standard_absorbance[:,4], wavenumber, abs_remove_CO2)
+plt.legend(plotter, ['summed_noCO2' ,'measurement','meas_onlyCO2', 'DB_CO2', 'abs_remove_CO2'])
 plt.show
