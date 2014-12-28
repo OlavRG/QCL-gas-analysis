@@ -76,11 +76,12 @@ def fit_remove_molecule(absorbance, peakwidth, mlcl, wavenumber, look, Delta):
             len_x = len(peak_x)
             mean = wavenumber[ind]
             sigma = np.sqrt(np.dot(peak_x-mean,peak_x-mean)/len_x)
-            popt, pcov = curve_fit(gauss_func, peak_x, peak_y, p0 = [1, mean, sigma])
-            y_fit = gauss_func(peak_x, popt[0], popt[1], popt[2])
-            absorbance[ind-peakwidth:ind+peakwidth] = absorbance[ind-peakwidth:ind+peakwidth] - y_fit
-        
-        return absorbance
+    #        sigma = sum(peak_y*(peak_x-mean)**2)/len_x
+            popt, pcov = curve_fit(gauss_func, peak_x, peak_y, p0 = [0.02, mean, sigma])
+            y_fit = gauss_func(peak_x, *popt)
+            absorbance[ind-peakwidth:ind+peakwidth] = absorbance[ind-peakwidth:ind+peakwidth] - y_fit        
+    
+    return absorbance
 
 #if __name__ == '__main__':
 # Test for load_database_compound

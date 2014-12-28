@@ -94,41 +94,15 @@ standard_absorbance_noCO2 = standard_absorbance
 for idx, val in enumerate(molecule_list_rel):
     if 'Carbon_dioxide' in val:
         standard_absorbance_noCO2 = np.delete(standard_absorbance,idx,1)
-        bla = pdet.peakdetect(standard_absorbance[:,idx], wavenumber, lookahead = 10, delta = 0.01)
-        print idx
+#        bla = pdet.peakdetect(standard_absorbance[:,idx], wavenumber, lookahead = 10, delta = 0.01)
 
 abs_meas_onlyCO2 = abs_meas - np.sum(standard_absorbance_noCO2,1)
 
-absorbance, peakwidth, mlcl, wavenumber, look, Delta = abs_meas_onlyCO2, 10, standard_compound[:,4],wavenumber, 10, 0.0002
-mlcl_peaks, mlcl_valleys = pdet.peakdetect(mlcl, lookahead = look, delta = Delta)
-peak_index, peak_height = zip(*mlcl_peaks)
+abs_remove_CO2 = bam.fit_remove_molecule(abs_meas_onlyCO2, 10, standard_compound[:,4],wavenumber, 10, 0.0002)
 
-def gauss_func(peak_x, a, x0, sigma):
-    return a*np.exp(-(peak_x-x0)**2/(2*sigma**2))
-
-for ind in peak_index:
-    peak_range = range(ind-peakwidth,ind+peakwidth)
-    peak_x = wavenumber[peak_range]
-    peak_y = absorbance[peak_range]
-    if max(peak_y) >= 0.04:
-        len_x = len(peak_x)
-        mean = wavenumber[ind]
-#        sigma = np.sqrt(np.dot(peak_x-mean,peak_x-mean)/len_x)
-        sigma = sum(peak_y*(peak_x-mean)**2)/len_x
-        popt, pcov = curve_fit(gauss_func, peak_x, peak_y, p0 = [1, mean, sigma])
-        y_fit = gauss_func(peak_x, *popt)
-        absorbance[ind-peakwidth:ind+peakwidth] = absorbance[ind-peakwidth:ind+peakwidth] - y_fit
-    if ind == peak_index[1]:
-        break
-    
+abs_remove_CO2 = abs_remove_CO2 + np.sum(standard_absorbance_noCO2,1)
 
 
-#abs_remove_CO2 = bam.fit_remove_molecule(abs_meas_onlyCO2, 10, standard_compound[:,4],wavenumber, 10, 0.0002)
-
-matplotlib.pyplot.close("all")
-plt.plot(peak_x, peak_y, peak_x, y_fit)
-plt.figure()
-plt.show
 # Get CO2 peak wavenumbers, intensity, indices
 
 # (Optional peakfinder)
@@ -144,9 +118,10 @@ plt.show
 #absorbance_legend.insert(0,'healthy')
 #plt.legend(abs_plot, absorbance_legend)
 #plt.show()
-abs_meas_onlyCO2 = abs_meas - np.sum(standard_absorbance_noCO2,1)
-
+#abs_meas_onlyCO2 = abs_meas - np.sum(standard_absorbance_noCO2,1)
 sum_st_abs = np.sum(standard_absorbance_noCO2,1)
+
+matplotlib.pyplot.close("all")
 plotter = plt.plot(wavenumber,sum_st_abs,wavenumber,abs_meas,wavenumber,abs_meas_onlyCO2, wavenumber, standard_absorbance[:,4], wavenumber, abs_remove_CO2)
 plt.legend(plotter, ['summed_noCO2' ,'measurement','meas_onlyCO2', 'DB_CO2', 'abs_remove_CO2'])
 plt.show
