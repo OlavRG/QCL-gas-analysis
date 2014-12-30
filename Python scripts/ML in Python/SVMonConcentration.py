@@ -14,5 +14,5 @@ clf = svm.SVC().fit(X_train, y_train)
 score=clf.score(X_test, y_test)
 
 
-loo = cross_validation.LeaveOneOjg,ut(140)
+loo = cross_validation.LeaveOneOut(140)
 len(loo)
