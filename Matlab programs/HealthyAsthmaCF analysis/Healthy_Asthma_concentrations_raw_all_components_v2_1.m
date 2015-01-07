@@ -2,7 +2,7 @@
 
 %Dependencies: 
 %   difference_for_least_squares_all.m       
-%   compound_region.mat
+%   compound_region.mat		(output from HealthyAsthma_analysis.m)
 %       compound_path
 %       file_regexp
 %       file_extension
@@ -12,6 +12,7 @@
 %   calibration script)
 %   Standard compound files and path
 %   compound files of compounds in compound_region
+%	external strjoin function from Kota Yamaguchi. Will use MATLAB's strjoin if external is not loaded, and thereby fail.
 
 % %   Input
 % data_path   =   ['L:\IST\OP\scratch\Olav Grouwstra\Measurements\'...

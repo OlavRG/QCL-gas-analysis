@@ -97,7 +97,7 @@ clear all
     
 % For each compound:
     % Put list of files of the compound in compound_dir, find the right
-    % file and load it. To acces variable with string name, copy it to
+    % file and load it. To access variable with string name, copy it to
     % temporary compound_copy. Now for each region find the start and end
     % index for the particular compound, and if all intensities within the
     % region > min_intensity, then set it to one in the compound_region

@@ -9,7 +9,7 @@ function [ compound5 ] = load_compound ...
     fclose(fid);
 
 % Convert HITRAN's base-e absorption coeff alpha to base-10 absorbance A
-%     if isstruct(compound1)   %used for identifying HITRAN TXT's
+%     if isstruct(compound1)   %used for identifying HITRAN TXT's when using MATLAB's load function
 %         compound2   =   -log10(exp(-compound1.data(:,2)*10^-4));
 %         compound3     =   [compound1.data(:,1),compound2];
 %     else %PNNL TXT's have class double
