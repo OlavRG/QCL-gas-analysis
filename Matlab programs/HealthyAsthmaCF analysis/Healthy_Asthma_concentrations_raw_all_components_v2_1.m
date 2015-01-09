@@ -107,6 +107,8 @@ addpath(['L:\IST\OP\scratch\Olav Grouwstra\Matlab programs\'...
         =   zeros(length(wavenumber),nExtraCompound);
     
     toc(timeId1);
+
+% This loop counts the compounds present in region_pres or more regions, and loads them
 j=0;
 for k=2:4%row_compound_region
     if sum([compound_region{k,2:1+col_p_region}])     >=   region_pres
