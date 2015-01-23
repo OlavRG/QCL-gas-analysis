@@ -163,7 +163,7 @@ function [adjusted_intensity_data_monitor,adjusted_intensity_data_main]=Calibrat
 %     subplot(2,1,2);
 %     plot(wavenumber_data,mean_intensity,'--rs')
     hold on
-    plot(wavenumber_data,adjusted_intensity_data_monitor(:,[1 2 3 4 5 11 12 13 14 15]))
+    plot(wavenumber_data,adjusted_intensity_data_monitor(:,[1 2]))
     hold off
     xlabel('Wavenumber (cm^-^1)')
     ylabel('Intensity')
@@ -172,7 +172,7 @@ function [adjusted_intensity_data_monitor,adjusted_intensity_data_main]=Calibrat
     figure;
 %     subplot(2,1,1);%plot(wavenumber_data,mean_intensity,'--rs')
     hold on
-    plot(wavenumber_data,main_intensity_data(:,[1 2 3 4 5 11 12 13 14 15]))
+    plot(wavenumber_data,main_intensity_data(:,[1 2]))
     hold off
     xlabel('Wavenumber (cm^-^1)')
     ylabel('Intensity')
@@ -181,7 +181,7 @@ function [adjusted_intensity_data_monitor,adjusted_intensity_data_main]=Calibrat
     figure;
 %     subplot(2,1,2);%plot(wavenumber_data,mean_intensity,'--rs')
     hold on
-    plot(wavenumber_data,adjusted_intensity_data_main(:,[1 2 3 4 5 11 12 13 14 15]))
+    plot(wavenumber_data,adjusted_intensity_data_main(:,[1 2]))
     hold off
     xlabel('Wavenumber (cm^-^1)')
     ylabel('Intensity')

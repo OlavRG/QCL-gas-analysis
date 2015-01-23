@@ -41,11 +41,13 @@
 % monitor_intensity_data_meas = Processed_Data_Wavenumber_Calibration{1,1}.Measurement_Monitor_Intensity_Raw;
 % main_intensity_data_ref = Processed_Data_Wavenumber_Calibration{1,1}.Reference_MainSignal_Intensity_Raw;
 % main_intensity_data_meas = Processed_Data_Wavenumber_Calibration{1,1}.Measurement_MainSignal_Intensity_Raw;
+% begin_range = 1;
+% end_range = 1;
 
 
 %% Function declaration
 function [absorbance_mean_adjusted_data]=Raw_data_to_absorbance(wavenumber_data, monitor_intensity_data_ref, monitor_intensity_data_meas, main_intensity_data_ref, main_intensity_data_meas)
-close all
+
 [rowmonref,colmonref]                     =   size(monitor_intensity_data_ref);
 [rowmonmeas,colmonmeas]                   =   size(monitor_intensity_data_meas);
 
@@ -67,21 +69,21 @@ absorbance_mean_adjusted_data                   =   -log10(Mean_Adjusted_Measure
 absorbance_mean_data_old                        =   -log10(Mean_Measurement_Intensity_old./Mean_Reference_Intensity_old);
 
 
-% figure;
-% subplot(2,1,1);plot(wavenumber_data,Adjusted_Reference_Intensity,'r',wavenumber_data,Adjusted_Measurement_Intensity,'b')
-% legend('Adjusted Reference Intensity Raw','Adjusted Measurement Intensity Raw')
-% title('Calibrated Refs and Meas')
-% 
-% subplot(2,1,2);plot(wavenumber_data,Mean_Adjusted_Reference_Intensity,'r',wavenumber_data,Mean_Adjusted_Measurement_Intensity,'b')
-% legend('Reference Intensity','Measurement Intensity')
-% title('Average of calibrated Refs and Meas')
-% 
+figure;
+subplot(2,1,1);plot(wavenumber_data,Adjusted_Reference_Intensity,'r',wavenumber_data,Adjusted_Measurement_Intensity,'b')
+legend('Adjusted Reference Intensity Raw','Adjusted Measurement Intensity Raw')
+title('Calibrated Refs and Meas')
+
+subplot(2,1,2);plot(wavenumber_data,Mean_Adjusted_Reference_Intensity,'r',wavenumber_data,Mean_Adjusted_Measurement_Intensity,'b')
+legend('Reference Intensity','Measurement Intensity')
+title('Average of calibrated Refs and Meas')
+
 % calibration_adjusted_reference_to_intensity                 =   Calibration_to_peaks_mean(wavenumber_data,[Adjusted_Reference_Intensity, Adjusted_Measurement_Intensity]);
 % absorbance_calibration_reference_to_intensity          =   -log10(calibration_adjusted_reference_to_intensity(:,refcol+1:refcol+meascol)./calibration_adjusted_reference_to_intensity(:,1:refcol));
 
-% figure;
-% plot(wavenumber_data,absorbance_mean_adjusted_data,'b',wavenumber_data,absorbance_mean_data_old,'r')%,wavenumber_data,mean(absorbance_calibration_reference_to_intensity')','k')
-% legend('calibrated absorbance','uncalibrated absorbance','absorbance calibration mean reference to intensity');
+figure;
+plot(wavenumber_data,absorbance_mean_adjusted_data,'b',wavenumber_data,absorbance_mean_data_old,'r')%,wavenumber_data,mean(absorbance_calibration_reference_to_intensity')','k')
+legend('calibrated absorbance','uncalibrated absorbance','absorbance calibration mean reference to intensity');
 
 % Compare ways of getting the std
 std_Adjusted_Reference_Intensity                =   std(Adjusted_Reference_Intensity')';
@@ -96,19 +98,19 @@ std_log_Reference_Intensity_Raw                 =   std(-log10(Reference_Intensi
 std_log_ratio_Adjusted_Reference_Intensity      =   std(-log10(Adjusted_Reference_Intensity(:,1:5)./Adjusted_Reference_Intensity(:,6:10))')';
 std_log_ratio_Reference_Intensity_Raw           =   std(-log10(Reference_Intensity_Raw(:,1:5)./Reference_Intensity_Raw(:,6:10))')';
 
-%     figure;
-%     subplot(2,2,1);plot(wavenumber_data,std_Adjusted_Reference_Intensity,'b',wavenumber_data,std_Reference_Intensity_Raw,'r')
-%     legend('std Adjusted','std Raw')
-%     title('std Reference')
-%     subplot(2,2,2);plot(wavenumber_data,std_ratio_Adjusted_Reference_Intensity,'b',wavenumber_data,std_ratio_Reference_Intensity_Raw,'r')
-%     legend('std ratio Adjusted','std ratio Raw')
-%     title('std ratio Reference')
-%     subplot(2,2,3);plot(wavenumber_data,std_log_Adjusted_Reference_Intensity,'b',wavenumber_data,std_log_Reference_Intensity_Raw,'r')
-%     legend('std log Adjusted','std log Raw')
-%     title('std log Reference')
-%     subplot(2,2,4);plot(wavenumber_data,std_log_ratio_Adjusted_Reference_Intensity,'b',wavenumber_data,std_log_ratio_Reference_Intensity_Raw,'r')
-%     legend('std log ratio Adjusted','std log ratio Raw')
-%     title('std log ratio Reference')
+    figure;
+    subplot(2,2,1);plot(wavenumber_data,std_Adjusted_Reference_Intensity,'b',wavenumber_data,std_Reference_Intensity_Raw,'r')
+    legend('std Adjusted','std Raw')
+    title('std Reference')
+    subplot(2,2,2);plot(wavenumber_data,std_ratio_Adjusted_Reference_Intensity,'b',wavenumber_data,std_ratio_Reference_Intensity_Raw,'r')
+    legend('std ratio Adjusted','std ratio Raw')
+    title('std ratio Reference')
+    subplot(2,2,3);plot(wavenumber_data,std_log_Adjusted_Reference_Intensity,'b',wavenumber_data,std_log_Reference_Intensity_Raw,'r')
+    legend('std log Adjusted','std log Raw')
+    title('std log Reference')
+    subplot(2,2,4);plot(wavenumber_data,std_log_ratio_Adjusted_Reference_Intensity,'b',wavenumber_data,std_log_ratio_Reference_Intensity_Raw,'r')
+    legend('std log ratio Adjusted','std log ratio Raw')
+    title('std log ratio Reference')
 
 
 % Prepare std-data
