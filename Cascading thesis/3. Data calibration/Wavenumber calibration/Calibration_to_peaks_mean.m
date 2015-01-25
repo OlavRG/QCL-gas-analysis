@@ -60,12 +60,15 @@ function [adjusted_intensity_data_monitor,adjusted_intensity_data_main]=Calibrat
     index_valleys_mean                          =   index_begin_range + subindex_valleys_mean - 1;
     
 % Remove front and end peak indices such that area to adjust always starts
-% and ends in valleys.
+% and ends in valleys. Do the same for the intensity, so vectors remain the
+% same length for plotting.
     if index_peaks_mean(1) <= index_valleys_mean(1)
         index_peaks_mean                        =   index_peaks_mean(2:length(index_peaks_mean));
+        intensity_peak_mean                        =   intensity_peak_mean(2:length(intensity_peak_mean));
     end
     if index_peaks_mean(length(index_peaks_mean)) >= index_valleys_mean(length(index_valleys_mean))
         index_peaks_mean                        =   index_peaks_mean(1:length(index_peaks_mean)-1);
+        intensity_peak_mean                        =   intensity_peak_mean(1:length(intensity_peak_mean)-1);
     end
     
     
@@ -98,8 +101,10 @@ function [adjusted_intensity_data_monitor,adjusted_intensity_data_main]=Calibrat
 
 % Shorten valley mean vector such that minima found will be written to
 % those minima valleys that are actually in between peaks within the
-% determined range.
+% determined range. Do the same for the intensity, so vectors remain the
+% same length for plotting.
     index_valleys_mean                           =  index_valleys_mean(2:length(index_valleys_mean)-1);
+    intensity_valley_mean                           =  intensity_valley_mean(2:length(intensity_valley_mean)-1);
     
     for k=1:length(index_peaks_mean)-1
         [intensity_valley_data(k,:),subindex_valley_data(k,:)]  	=   min(monitor_intensity_data(index_peaks_mean(k)+1:index_peaks_mean(k+1)-1,:),[],1);
@@ -147,7 +152,37 @@ function [adjusted_intensity_data_monitor,adjusted_intensity_data_main]=Calibrat
             adjusted_intensity_data_main(begin_adjust:end_adjust,k)     =   interp1(wavenumber_data(begin_adjust):wavenumber_interval:wavenumber_data(end_adjust),main_intensity_data(begin_data:end_data,k),wavenumber_data(begin_adjust:end_adjust),'linear');
         end
     end
-                                                    
+    
+% Plot mean of monitor and a single uncalibrated signal
+    figure;
+%     subplot(2,1,1);
+    plot11 = plot(wavenumber_data,mean_intensity,'--r');
+    hold on
+    plot12 = plot(wavenumber_data,monitor_intensity_data(:,[1]));
+    plot13 = plot(wavenumber_data(index_peaks_mean),intensity_peak_mean,'sk');
+    plot14 = plot(wavenumber_data(index_valleys_mean),intensity_valley_mean,'sk');
+    hold off
+    xlabel('Wavenumber (cm^-^1)')
+    ylabel('Intensity')
+    legend([plot11,plot12,plot13],'Mean of all monitor signals','Monitor signal','Peaks and valleys of the mean')
+    title('Uncalibrated monitor data of two independent measurements')
+
+% Plot mean of monitor and a single calibrated signal
+    figure;
+%     subplot(2,1,1);
+    plot21 = plot(wavenumber_data,mean_intensity,'--r');
+    hold on
+    plot22 = plot(wavenumber_data,adjusted_intensity_data_monitor(:,[1]));
+    plot23 = plot(wavenumber_data(index_peaks_mean),intensity_peak_mean,'sk');
+    plot24 = plot(wavenumber_data(index_valleys_mean),intensity_valley_mean,'sk');
+    hold off
+    xlabel('Wavenumber (cm^-^1)')
+    ylabel('Intensity')
+    legend([plot21,plot22,plot23],'Mean of all monitor signals','Monitor signal','Peaks and valleys of the mean')
+    title('Uncalibrated monitor data of two independent measurements')
+    
+    
+    
 % Plot old and calibrated intensity data
     figure;
 %     subplot(2,1,1);
@@ -163,7 +198,7 @@ function [adjusted_intensity_data_monitor,adjusted_intensity_data_main]=Calibrat
 %     subplot(2,1,2);
 %     plot(wavenumber_data,mean_intensity,'--rs')
     hold on
-    plot(wavenumber_data,adjusted_intensity_data_monitor(:,[1 2]))
+    plot(wavenumber_data,adjusted_intensity_data_monitor(:,[1 2 3 4 5 11 12 13 14 15]))
     hold off
     xlabel('Wavenumber (cm^-^1)')
     ylabel('Intensity')
@@ -172,7 +207,7 @@ function [adjusted_intensity_data_monitor,adjusted_intensity_data_main]=Calibrat
     figure;
 %     subplot(2,1,1);%plot(wavenumber_data,mean_intensity,'--rs')
     hold on
-    plot(wavenumber_data,main_intensity_data(:,[1 2]))
+    plot(wavenumber_data,main_intensity_data(:,[1 2 3 4 5 11 12 13 14 15]))
     hold off
     xlabel('Wavenumber (cm^-^1)')
     ylabel('Intensity')
@@ -181,7 +216,7 @@ function [adjusted_intensity_data_monitor,adjusted_intensity_data_main]=Calibrat
     figure;
 %     subplot(2,1,2);%plot(wavenumber_data,mean_intensity,'--rs')
     hold on
-    plot(wavenumber_data,adjusted_intensity_data_main(:,[1 2]))
+    plot(wavenumber_data,adjusted_intensity_data_main(:,[1 2 3 4 5 11 12 13 14 15]))
     hold off
     xlabel('Wavenumber (cm^-^1)')
     ylabel('Intensity')

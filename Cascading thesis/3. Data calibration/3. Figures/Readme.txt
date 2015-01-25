@@ -1,0 +1,1 @@
+'Full' indicates a picture is zoomed in but the tikz file still has data for all wavenumbers. This data is too much from sharelatex to handle. Nonfull are either zoomed-in with removed data, or entire spectrum for only a single measurement.
