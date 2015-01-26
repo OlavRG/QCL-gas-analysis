@@ -108,7 +108,7 @@ toc
         index_peak_data(k,:)                                            =   index_last_valley + subindex_peak_data(k,:) - 1;
 
 
-        if k==length(index_peaks_CO2) %Last part of loop (the valley determination) goes untill length(index_peaks_CO2)=(length(index_valleys_CO2)-2)
+        if k==length(index_peaks_CO2) %Last part of loop (the valley determination) goes until length(index_peaks_CO2)=(length(index_valleys_CO2)-2) Isn't it -1?
             break
         end
         
