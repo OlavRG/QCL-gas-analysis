@@ -26,10 +26,9 @@ clear all
 % Declare variables
     max_p           =   0.05;
     min_p_region    =   10;
-    min_intensity   =   10^(-6);
+    min_intensity   =   10^(-6);%10^(-6); %-3 gives 24 molecules, 0 in both regions
     interaction_length = 54.36; % in meters
-    compound_path   =   'W:\';%['L:\IST\OP\scratch\Adonis\Databases\' ... 
-        %'PNNL Database\Compounds\'];
+    compound_path   =   ['D:\Workspace\PNNL Database\']; %must end in '\' to work
     file_regexp     =   '.*_25T?.TXT';
     file_extension  =   '.TXT';
 % Set indices of folders of compounds to use
@@ -49,13 +48,13 @@ clear all
 %         'raw.quantile.healthy.vs.asthma.alldata.26-8-2014.no zeros.csv'],'\t',1);
     pvalues=    importdata(['D:\Workspace\Breath Analysis\'...
         'Measurements\P-values of CO2H2O calibrated data\'...
-        'raw.MAD.healthy.vs.CF.alldata.csv'],',',1);
+        'raw.MAD.healthy.vs.asthma.alldata.csv'],',',1);
 
     wavenumber= load('D:\Workspace\Breath Analysis\Measurements\Wavenumber.txt');
     
 % Determine indices of wavenumber regions of at least min_p_region 
 % consecutive p-values < max_p
-    [ind]                   =   find(pvalues.data(:,5) <= max_p);
+    [ind]                   =   find(pvalues.data(:,6) <= max_p); %Make sure to check "adj. p-value"
     length_ind              =   length(ind);
     ind_filtered            =   zeros(length_ind,1);
     for i=2:length_ind-min_p_region+1               % Make work for i=1:len...

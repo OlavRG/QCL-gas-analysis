@@ -20,9 +20,9 @@ addpath(genpath('H:\My Documents\GitHub\QCL-gas-analysis\Matlab programs'));
 % that are present (Absorbance>E-45) in "Absorbance calibrated with
 % 6molecules.fig" should get. Higher absorbance and lower concentration
 % makes this stricter.
-    minimum_absorbance  =   10^-7; % in base-10 absorbance: I=I0*10^(-A)
+    minimum_absorbance  =   50*10^-7%10^-7; % in base-10 absorbance: I=I0*10^(-A)
     assumed_concentration = 0.001; % in ppmv
-    interaction_length = 1; % in meter
+    interaction_length = 54.36%1; % in meter
 
 % In case one wishes to filter in a certain wavelength range
 %     wavelength_start    = 1020;

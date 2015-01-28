@@ -82,7 +82,6 @@ def fit_remove_molecule(absorbance, peakwidth, mlcl, wavenumber, look, Delta):
             popt, pcov = curve_fit(gauss_func, peak_x, peak_y, p0 = [magnitude, mean, sigma])
             y_fit = gauss_func(peak_x, *popt)
             new_absorbance[ind-peakwidth:ind+peakwidth] = absorbance[ind-peakwidth:ind+peakwidth] - y_fit        
-    
     return new_absorbance
 
 #if __name__ == '__main__':
