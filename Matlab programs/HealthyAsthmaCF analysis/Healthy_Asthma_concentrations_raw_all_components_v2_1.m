@@ -15,8 +15,8 @@
 %	external strjoin function from Kota Yamaguchi. Will use MATLAB's strjoin if external is not loaded, and thereby fail.
 
 % %   Input
-% data_path   =   ['L:\IST\OP\scratch\Olav Grouwstra\Measurements\'...
-%                 'CO2H2O calibrated data\data of 26-8-2014\data no zeros\'];
+% data_path   =   ['D:\Workspace\Breath Analysis\Measurements\'...
+%                 'data of 26-8-2014\data no zeros\'];
 % list        =   ['G0S1';'G0S2';'G0S3';'G0S4';'G1S1';'G1S2';'G2S1';'G2S2'];
 % G0S1        =   importdata([data_path list(1,:) '.TXT']); G0S1=G0S1.data;
 % G0S2        =   importdata([data_path list(2,:) '.TXT']); G0S2=G0S2.data;
@@ -38,8 +38,7 @@ timeId1=tic;
 clear('database_compounds_all','func_all','lb','ub','C_initial_all','concentrations');
 
 
-addpath(['L:\IST\OP\scratch\Olav Grouwstra\Matlab programs\'...
-    'HealthyAsthmaCF analysis\strjoin']);
+addpath(['D:\Workspace\Breath Analysis\Matlab programs\HealthyAsthmaCF analysis\strjoin']);
     %Added so downloaded strjoin is loaded over strjoin of matlab's toolbox. 
 
 % load Healthy_Asthma_Raw_Calibrated.mat %Contains multiple variables
@@ -50,7 +49,7 @@ addpath(['L:\IST\OP\scratch\Olav Grouwstra\Matlab programs\'...
     healthy_asthma  =   [healthy, asthma];
     healthy_asthma(isnan(healthy_asthma)) = 0 ;
     options = optimset('Display','off','TolFun',1e-15); % 
-    wavenumber= load('L:\IST\OP\scratch\Olav Grouwstra\Measurements\Wavenumber.txt');
+    wavenumber= load('D:\Workspace\Breath Analysis\Measurements\Wavenumber.txt');
     wavenumber  =   wavenumber(1:length(G0S1)); 
     
 % Establish some sizes for later use
@@ -67,7 +66,7 @@ addpath(['L:\IST\OP\scratch\Olav Grouwstra\Matlab programs\'...
 
 % Prepare H2O and CO2 acetone and ammonia
     INTERACTION_LENGTH = 54.36;
-    STANDARD_COMPOUND_PATH  =   'L:\IST\OP\scratch\Olav Grouwstra\Compounds\';
+    STANDARD_COMPOUND_PATH  =   'D:\Workspace\Breath Analysis\Compounds\';
     standardCompoundList      =   cellstr(ls(STANDARD_COMPOUND_PATH));
     standardCompoundList      =   standardCompoundList(3:end,1);
 
@@ -110,7 +109,7 @@ addpath(['L:\IST\OP\scratch\Olav Grouwstra\Matlab programs\'...
 
 % This loop counts the compounds present in region_pres or more regions, and loads them
 j=0;
-for k=2:4%row_compound_region
+for k=2:row_compound_region
     if sum([compound_region{k,2:1+col_p_region}])     >=   region_pres
         j=j+1;
         compound_files{j,1}   =   cellstr(ls(fullfile(compound_path, ... 
@@ -119,8 +118,10 @@ for k=2:4%row_compound_region
         database_compounds_all(:,nStandardCompound+j) = load_compound ...
     ( wavenumber, [compound_path compound_region{k,1}(1:end) '\' standardFileName]);
         
-    time1=toc(timeId1);
-    disp([num2str(time1) 's ' num2str(k) ' out of ' num2str(row_compound_region)]) 
+        time1=toc(timeId1);
+        if mod(k,10)==0   
+            disp([num2str(time1) 's ' num2str(k) ' out of ' num2str(row_compound_region)]) 
+        end
     else
     end
     
@@ -138,7 +139,7 @@ end
     lb = zeros(size(C_initial_all)); %lower bound of zero
     ub = Inf*ones(size(C_initial_all));
 
-for i=1:samples_healthy+samples_asthma;
+for i=1:2;%samples_healthy+samples_asthma;
     
     func_all = @(C) difference_for_least_squares_all( ...
         healthy_asthma(:,i), database_compounds_all*INTERACTION_LENGTH, C);
@@ -152,26 +153,37 @@ compoundListTotal = [standardCompoundList;compound_region(2:end,1)];
 % dlmwrite('concentrationArray.txt',concentrationArray,'precision','%1.15g')
 
 
-% figure;
-% dg = [0 0.5 0];
-% sample=1;
-% absoverlaid=plot(wavenumber,healthy_asthma(:,sample),...
-%     wavenumber,database_compounds_all(:,1)*interaction_length*mean_concentration_raw_healthy_asthma{sample+1,1+1},...%,'Color',dg)%,...
-%     wavenumber,database_compounds_all(:,2)*interaction_length*mean_concentration_raw_healthy_asthma{sample+1,2+1},...
-%     wavenumber,database_compounds_all(:,3)*interaction_length*mean_concentration_raw_healthy_asthma{sample+1,3+1},...
-%     wavenumber,database_compounds_all(:,4)*interaction_length*mean_concentration_raw_healthy_asthma{sample+1,4+1},...
-%     wavenumber,database_compounds_all(:,5)*interaction_length*mean_concentration_raw_healthy_asthma{sample+1,5+1},...
-%     wavenumber,database_compounds_all(:,6)*interaction_length*mean_concentration_raw_healthy_asthma{sample+1,6+1})%,'Color',[0.5 0.5 0.5])
-% xlabel('Wavenumber (cm^-^1)')
-% ylabel('Absorbance')
-% title('Absorbance spectrum with molecule spectra overlaid');
-% legend(absoverlaid, 'Absorbance',...
-%     'CO_2',...
-%     'H_2O',...
-%     'Acetone',...
-%     'Ammonia',...
-%     'Methane',...
-%     'Ethanol')
+figure;
+dg = [0 0.5 0];
+sample=1;
+toplot = [4,5,7,8,9,14];
+%absorbance = concentrationArray(sample,:)'.*database_compounds_all;%INTERACTION_LENGTH
+
+absoverlaid=plot(wavenumber,healthy_asthma(:,sample),...
+    wavenumber,database_compounds_all(:,4)*INTERACTION_LENGTH*concentrationArray(sample,4),...%,'Color',dg)%,...
+    wavenumber,database_compounds_all(:,5)*INTERACTION_LENGTH*concentrationArray(sample,5),...
+    wavenumber,database_compounds_all(:,7)*INTERACTION_LENGTH*concentrationArray(sample,7),...
+    wavenumber,database_compounds_all(:,8)*INTERACTION_LENGTH*concentrationArray(sample,8),...
+    wavenumber,database_compounds_all(:,9)*INTERACTION_LENGTH*concentrationArray(sample,9),...
+    wavenumber,database_compounds_all(:,14)*INTERACTION_LENGTH*concentrationArray(sample,14)),'Color',dg
+xlabel('Wavenumber (cm^-^1)')
+ylabel('Absorbance')
+title('Absorbance spectrum with molecule spectra overlaid');
+legend(absoverlaid, 'Absorbance',...
+    standardCompoundList{toplot(1)},...
+    standardCompoundList{toplot(2)},...
+    standardCompoundList{toplot(3)},...
+    standardCompoundList{toplot(4)},...
+    standardCompoundList{toplot(5)},...
+    standardCompoundList{toplot(6)})
+
+% To save list of molecules with concentrations
+% concentrationCell=horzcat(compoundListTotal,num2cell(concentrationArray(1,:)'));
+% C = concentrationCell.';
+% fid = fopen('ConcentrationSingleHealthySampleFull.dlm', 'wt');
+% fprintf(fid, '"%s"\t%g\n', C{:});
+% fclose(fid);
+
 % 
 % %Separate healthy and asthmatic data and get 
 % concentrations_healthy = concentrationArray(1:samples_healthy,:);

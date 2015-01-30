@@ -1,0 +1,15 @@
+In order to find the concentrations, the following \textit{options} argument is used for the \textit{lsqnonlin} function in MATLAB:\\
+\textit{options = optimset('Display','off','TolFun',1e-15)}
+
+\begin{longtable}{|l|c|} 
+\caption{Table of initial concentrations used to calculate the concentrations as given in \autoref{app:concentrationsHealthy}.}\\
+\toprule
+\textbf{Molecule} & \textbf{Concentration (ppmv)}\\ \hline
+%\midrule
+\endhead
+Carbon dioxide & 1000\\ \hline
+Water & 1000\\ \hline
+Standard molecules & 1 \\ \hline
+Other molecules & 0.01 \\ \hline
+\bottomrule
+\end{longtable}

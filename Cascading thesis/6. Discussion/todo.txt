@@ -1,0 +1,3 @@
+Current barplot should be redone in tikz somehow
+
+Need more numbers in discussion: quantitative results

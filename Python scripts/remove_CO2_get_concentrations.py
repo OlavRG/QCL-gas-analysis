@@ -116,6 +116,7 @@ plotter = plt.plot(wavenumber,sum_st_abs,wavenumber,abs_meas,wavenumber,abs_meas
 plt.legend(plotter, ['summed_noCO2' ,'measurement','meas_onlyCO2', 'DB_CO2', 'abs_remove_CO2'])
 plt.show
 
+
 ## Plot absorbances
 fig2 = plt.figure()
 standard_absorbance = standard_compound * conc_opt1 * gas_length
@@ -129,3 +130,10 @@ absorbance_legend.insert(0,'healthy')
 plt.legend(abs_plot1, absorbance_legend)
 #plt.legend(abs_plot2, absorbance_legend)
 plt.show()
+
+## This plot shows the decrease in the ethyl alcohol estimate. It is only 2%, so hardly noticeable.
+fig3 = plt.figure()
+plotter15 = plt.plot(wavenumber, abs_remove_CO2,wavenumber,standard_absorbance[:,8],wavenumber,standard_absorbance2[:,8])
+plt.legend(plotter15, ['abs_remove_CO2','Ethyl alcohol before CO2 removal' ,'Ethyl alcohol after CO2 removal'])
+plt.show
+

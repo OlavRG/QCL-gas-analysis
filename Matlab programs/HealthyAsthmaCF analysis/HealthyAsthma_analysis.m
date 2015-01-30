@@ -26,7 +26,7 @@ clear all
 % Declare variables
     max_p           =   0.05;
     min_p_region    =   10;
-    min_intensity   =   10^(-6);%10^(-6); %-3 gives 24 molecules, 0 in both regions
+    min_intensity   =   10^(-4);%10^(-6); %-3 gives 24 molecules, -4 130, -6 401
     interaction_length = 54.36; % in meters
     compound_path   =   ['D:\Workspace\PNNL Database\']; %must end in '\' to work
     file_regexp     =   '.*_25T?.TXT';
@@ -150,7 +150,6 @@ clear all
     end
 beep
 % Save variables for Concentration_determination.m
-% save raw.MAD.healthy.vs.CF.alldata.alldata_compound_region_min_int_E-6.mat compound_region p_region compound_path file_regexp ...
-%     file_extension
-%     
+%  save healthy.vs.asthmatic.mat compound_region p_region compound_path file_regexp ...
+%      file_extension max_p min_p_region min_intensity
 toc
